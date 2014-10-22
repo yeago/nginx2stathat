@@ -12,11 +12,11 @@ import (
 
 // Command line flags and arguments
 var (
-	statPrefix     = flag.String("prefix", "", "Stat prefix. Ex.: \"`hostname -s` live site\"")
+	statPrefix	 = flag.String("prefix", "", "Stat prefix. Ex.: \"`hostname -s` live site\"")
 	parserRoutines = flag.Int("parsers", 4, "Number of parallel routines parsing log lines and queueing them to the posters")
 	posterRoutines = flag.Int("posters", 4, "Number of parallel routines sending results to StatHat")
-	ezKey          string
-	accessLog      string
+	ezKey		  string
+	accessLog	  string
 )
 
 // Print command line help and exit application
@@ -55,10 +55,9 @@ func parseLines(lines <-chan *tail.Line, hits chan<- *loghit.LogHit, errors chan
 func postStats(prefix, ezKey string, hits <-chan *loghit.LogHit) {
 	for hit := range hits {
 		var stat string
+		stat = fmt.Sprintf("HTTP %d | %s", hit.Status, hit.HttpReferer)
 		if len(prefix) > 0 {
-			stat = fmt.Sprintf("%s: HTTP %d", prefix, hit.Status)
-		} else {
-			stat = fmt.Sprintf("HTTP %d", hit.Status)
+			stat = fmt.Sprintf("%s: %s", prefix, stat)
 		}
 		stathat.PostEZCountTime(stat, ezKey, 1, hit.LocalTime.Unix())
 	}

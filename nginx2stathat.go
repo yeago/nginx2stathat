@@ -9,6 +9,7 @@ import (
 	"log/syslog"
 	"os"
 	"net/url"
+    "list"
 )
 
 // Command line flags and arguments
@@ -56,16 +57,18 @@ func parseLines(lines <-chan *tail.Line, hits chan<- *loghit.LogHit, errors chan
 func postStats(prefix, ezKey string, hits <-chan *loghit.LogHit) {
 	for hit := range hits {
 		var tokens list.List
+        var string fqdn
+        var string parts
 		fqdn, err = url.Parse(hit.HttpReferer)
 		if err == nil {
 			tokens.PushBack(fqdn)
 		}
-		parts = hit.Request.split(" ")
+		parts = hit.Request.Split(" ")
 		if len(parts) == 3 {
 			tokens.PushBack(parts[1])  // GET/POST
 		}
 		tokens.PushBack("HTTP %d", hit.Status)
-		stathat.PostEZCountTime(tokens.join(" | "), ezKey, 1, hit.LocalTime.Unix())
+		stathat.PostEZCountTime(tokens.Join(" | "), ezKey, 1, hit.LocalTime.Unix())
 	}
 }
 

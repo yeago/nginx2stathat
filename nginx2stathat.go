@@ -59,13 +59,13 @@ func postStats(prefix, ezKey string, dryRun bool, hits <-chan *loghit.LogHit) {
 	for hit := range hits {
 		var tokens		[]string
 		var parts		 []string
+        if len(prefix) > 0 {
+            tokens = append(tokens, fmt.Sprintf("%s" % prefix))
+        }
 		fqdn, err := url.Parse(hit.HttpReferer)
 		if err == nil {
 			tokens = append(tokens, fqdn.Host)
 		}
-        if len(prefix) > 0 {
-            tokens = append(tokens, fmt.Sprintf("%s" % prefix))
-        }
 		parts = strings.Split(hit.Request, " ")
 		tokens = append(tokens, parts[0])  // GET/POST
 		tokens = append(tokens, fmt.Sprintf("HTTP %d", hit.Status))

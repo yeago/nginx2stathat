@@ -19,7 +19,7 @@ var (
 	posterRoutines = flag.Int("posters", 4, "Number of parallel routines sending results to StatHat")
 	ezKey		  string
 	accessLog	  string
-    tokens        = list.List
+    tokens        list.List
     fqdn          string
     parts         string
 )
@@ -59,7 +59,7 @@ func parseLines(lines <-chan *tail.Line, hits chan<- *loghit.LogHit, errors chan
 // Send some stats to StatHat. Currently only HTTP status counts
 func postStats(prefix, ezKey string, hits <-chan *loghit.LogHit) {
 	for hit := range hits {
-		fqdn, err = url.Parse(hit.HttpReferer)
+		fqdn, err := url.Parse(hit.HttpReferer)
 		if err == nil {
 			tokens.PushBack(fqdn)
 		}

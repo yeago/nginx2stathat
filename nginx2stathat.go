@@ -21,7 +21,7 @@ var (
 	accessLog	  string
     tokens        []string
     fqdn          string
-    parts         string
+    parts         []string
 )
 
 // Print command line help and exit application

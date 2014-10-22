@@ -55,7 +55,7 @@ func parseLines(lines <-chan *tail.Line, hits chan<- *loghit.LogHit, errors chan
 }
 
 // Send some stats to StatHat. Currently only HTTP status counts
-func postStats(prefix, ezKey string, dryrun bool, hits <-chan *loghit.LogHit) {
+func postStats(prefix, ezKey string, dryRun bool, hits <-chan *loghit.LogHit) {
 	for hit := range hits {
 		var tokens		[]string
 		var parts		 []string
@@ -66,7 +66,7 @@ func postStats(prefix, ezKey string, dryrun bool, hits <-chan *loghit.LogHit) {
 		parts = strings.Split(hit.Request, " ")
 		append(tokens, parts[0])  // GET/POST
 		append(tokens, fmt.Sprintf("HTTP %d", hit.Status))
-		if dryrun==true {
+		if dryRun==true {
 			fmt.Println(strings.Join(tokens, " | "))
 		} else {
 			stathat.PostEZCountTime(strings.Join(tokens, " | "), ezKey, 1, hit.LocalTime.Unix())
@@ -93,7 +93,7 @@ func main() {
 	}
 
 	for i := 0; i < *posterRoutines; i++ {
-		go postStats(*statPrefix, ezKey, *dryrun, hits)
+		go postStats(*statPrefix, ezKey, *dryRun, hits)
 	}
 
 	logWriter, err := syslog.New(syslog.LOG_ERR, "nginx2stathat")

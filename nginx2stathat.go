@@ -57,14 +57,14 @@ func parseLines(lines <-chan *tail.Line, hits chan<- *loghit.LogHit, errors chan
 // Send some stats to StatHat. Currently only HTTP status counts
 func postStats(prefix, ezKey string, dryRun bool, hits <-chan *loghit.LogHit) {
 	for hit := range hits {
-		var tokens		[]*string
-		var parts		 []*string
+		var tokens		[]string
+		var parts		 []string
 		fqdn, err := url.Parse(hit.HttpReferer)
 		if err == nil {
-			append(tokens, fqdn.Host)
+			tokens = append(tokens, fqdn.Host)
 		}
 		parts = strings.Split(hit.Request, " ")
-		append(tokens, parts[0])  // GET/POST
+		tokens = append(tokens, parts[0])  // GET/POST
 		append(tokens, fmt.Sprintf("HTTP %d", hit.Status))
 		if dryRun==true {
 			fmt.Println(strings.Join(tokens, " | "))

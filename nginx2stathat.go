@@ -61,13 +61,13 @@ func postStats(prefix, ezKey string, hits <-chan *loghit.LogHit) {
 	for hit := range hits {
 		fqdn, err := url.Parse(hit.HttpReferer)
 		if err == nil {
-			append(tokens, fqdn)
+			append(tokens, fqdn.Host)
 		}
 		parts = strings.Split(hit.Request, " ")
 		if len(parts) == 3 {
 			append(tokens, parts[1])  // GET/POST
 		}
-		append(tokens, "HTTP %d", hit.Status)
+		append(tokens, fmt.Sprintf("HTTP %d", hit.Status))
 		stathat.PostEZCountTime(strings.Join(tokens, " | "), ezKey, 1, hit.LocalTime.Unix())
 	}
 }

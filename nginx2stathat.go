@@ -64,7 +64,7 @@ func postStats(prefix, ezKey string, dryRun bool, hits <-chan *loghit.LogHit) {
 			tokens = append(tokens, fqdn.Host)
 		}
         if len(prefix) > 0 {
-            tokens = tokens.append(prefix[0])
+            tokens = append(tokens, prefix[0])
         }
 		parts = strings.Split(hit.Request, " ")
 		tokens = append(tokens, parts[0])  // GET/POST

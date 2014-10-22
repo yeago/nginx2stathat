@@ -66,7 +66,7 @@ func postStats(prefix, ezKey string, dryrun bool, hits <-chan *loghit.LogHit) {
 		parts = strings.Split(hit.Request, " ")
 		append(tokens, parts[0])  // GET/POST
 		append(tokens, fmt.Sprintf("HTTP %d", hit.Status))
-		if length(dryrun) {
+		if dryrun==true {
 			fmt.Println(strings.Join(tokens, " | "))
 		} else {
 			stathat.PostEZCountTime(strings.Join(tokens, " | "), ezKey, 1, hit.LocalTime.Unix())

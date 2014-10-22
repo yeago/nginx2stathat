@@ -10,6 +10,7 @@ import (
 	"os"
 	"net/url"
     "container/list"
+    "strings"
 )
 
 // Command line flags and arguments
@@ -63,12 +64,12 @@ func postStats(prefix, ezKey string, hits <-chan *loghit.LogHit) {
 		if err == nil {
 			tokens.PushBack(fqdn)
 		}
-		parts = string.Split(hit.Request, " ")
+		parts = strings.Split(hit.Request, " ")
 		if len(parts) == 3 {
 			tokens.PushBack(parts[1])  // GET/POST
 		}
 		tokens.PushBack("HTTP %d", hit.Status)
-		stathat.PostEZCountTime(tokens.Join(" | "), ezKey, 1, hit.LocalTime.Unix())
+		stathat.PostEZCountTime(strings.Join(tokens, " | "), ezKey, 1, hit.LocalTime.Unix())
 	}
 }
 

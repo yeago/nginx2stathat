@@ -9,7 +9,7 @@ import (
 	"log/syslog"
 	"os"
 	"net/url"
-    "list"
+    "container/list"
 )
 
 // Command line flags and arguments

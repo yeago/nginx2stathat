@@ -57,7 +57,6 @@ func parseLines(lines <-chan *tail.Line, hits chan<- *loghit.LogHit, errors chan
 func postStats(prefix, ezKey string, hits <-chan *loghit.LogHit) {
 	for hit := range hits {
         var tokens        []string
-        var fqdn          string
         var parts         []string
 		fqdn, err := url.Parse(hit.HttpReferer)
 		if err == nil {

@@ -61,8 +61,8 @@ func postStats(prefix, ezKey string, hits <-chan *loghit.LogHit) {
 			tokens.PushBack(fqdn)
 		}
 		parts = hit.Request.split(" ")
-		if len(parts) == 3{
-			tokens.PushBack(parts[1])  # GET/POST
+		if len(parts) == 3 {
+			tokens.PushBack(parts[1])  // GET/POST
 		}
 		tokens.PushBack("HTTP %d", hit.Status)
 		stathat.PostEZCountTime(tokens.join(" | "), ezKey, 1, hit.LocalTime.Unix())

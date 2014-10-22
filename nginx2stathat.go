@@ -20,7 +20,7 @@ var (
 	posterRoutines = flag.Int("posters", 4, "Number of parallel routines sending results to StatHat")
 	ezKey		  string
 	accessLog	  string
-    tokens        list.List
+    tokens        []string
     fqdn          string
     parts         string
 )

@@ -17,7 +17,7 @@ var (
 	statPrefix	 = flag.String("prefix", "", "Stat prefix. Ex.: \"`hostname -s` live site\"")
 	parserRoutines = flag.Int("parsers", 4, "Number of parallel routines parsing log lines and queueing them to the posters")
 	posterRoutines = flag.Int("posters", 4, "Number of parallel routines sending results to StatHat")
-	dry_run	   = flag.Bool("dryrun", true, "Whether to actually create the stats or just print them")
+	dry_run	   = flag.BoolVar("dryrun", true, "Whether to actually create the stats or just print them")
 	ezKey		  string
 	accessLog	  string
 )

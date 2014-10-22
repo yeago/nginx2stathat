@@ -17,7 +17,7 @@ var (
 	statPrefix	 = flag.String("prefix", "", "Stat prefix. Ex.: \"`hostname -s` live site\"")
 	parserRoutines = flag.Int("parsers", 4, "Number of parallel routines parsing log lines and queueing them to the posters")
 	posterRoutines = flag.Int("posters", 4, "Number of parallel routines sending results to StatHat")
-	dryrun	   = flag.Bool("dryrun", true, "Whether to actually create the stats or just print them")
+	dry_run	   = flag.Bool("dryrun", true, "Whether to actually create the stats or just print them")
 	ezKey		  string
 	accessLog	  string
 )
@@ -55,7 +55,7 @@ func parseLines(lines <-chan *tail.Line, hits chan<- *loghit.LogHit, errors chan
 }
 
 // Send some stats to StatHat. Currently only HTTP status counts
-func postStats(prefix, ezKey string, dryrun bool, hits <-chan *loghit.LogHit) {
+func postStats(prefix, ezKey string, dry_run bool, hits <-chan *loghit.LogHit) {
 	for hit := range hits {
 		var tokens		[]string
 		var parts		 []string
@@ -66,7 +66,7 @@ func postStats(prefix, ezKey string, dryrun bool, hits <-chan *loghit.LogHit) {
 		parts = strings.Split(hit.Request, " ")
 		append(tokens, parts[0])  // GET/POST
 		append(tokens, fmt.Sprintf("HTTP %d", hit.Status))
-		if dryrun==true {
+		if dry_run==true {
 			fmt.Println(strings.Join(tokens, " | "))
 		} else {
 			stathat.PostEZCountTime(strings.Join(tokens, " | "), ezKey, 1, hit.LocalTime.Unix())
@@ -93,7 +93,7 @@ func main() {
 	}
 
 	for i := 0; i < *posterRoutines; i++ {
-		go postStats(*statPrefix, ezKey, *dryrun, hits)
+		go postStats(*statPrefix, ezKey, *dry_run, hits)
 	}
 
 	logWriter, err := syslog.New(syslog.LOG_ERR, "nginx2stathat")

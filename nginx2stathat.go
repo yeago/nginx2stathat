@@ -63,7 +63,7 @@ func postStats(prefix, ezKey string, hits <-chan *loghit.LogHit) {
 		if err == nil {
 			tokens.PushBack(fqdn)
 		}
-		parts = hit.Request.Split(" ")
+		parts = string.Split(hit.Request, " ")
 		if len(parts) == 3 {
 			tokens.PushBack(parts[1])  // GET/POST
 		}

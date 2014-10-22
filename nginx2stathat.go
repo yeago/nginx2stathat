@@ -93,7 +93,7 @@ func main() {
 	}
 
 	for i := 0; i < *posterRoutines; i++ {
-		go postStats(*statPrefix, ezKey, dryrun, hits)
+		go postStats(*statPrefix, ezKey, *dryrun, hits)
 	}
 
 	logWriter, err := syslog.New(syslog.LOG_ERR, "nginx2stathat")

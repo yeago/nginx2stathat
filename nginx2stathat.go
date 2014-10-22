@@ -8,6 +8,7 @@ import (
 	"github.com/stathat/go"
 	"log/syslog"
 	"os"
+	"net/url"
 )
 
 // Command line flags and arguments
@@ -54,12 +55,17 @@ func parseLines(lines <-chan *tail.Line, hits chan<- *loghit.LogHit, errors chan
 // Send some stats to StatHat. Currently only HTTP status counts
 func postStats(prefix, ezKey string, hits <-chan *loghit.LogHit) {
 	for hit := range hits {
-		var stat string
-		stat = fmt.Sprintf("HTTP %d | %s", hit.Status, hit.HttpReferer)
-		if len(prefix) > 0 {
-			stat = fmt.Sprintf("%s: %s", prefix, stat)
+		var tokens list.List
+		fqdn, err = url.Parse(hit.HttpReferer)
+		if err == nil {
+			tokens.PushBack(fqdn)
 		}
-		stathat.PostEZCountTime(stat, ezKey, 1, hit.LocalTime.Unix())
+		parts = hit.Request.split(" ")
+		if len(parts) == 3{
+			tokens.PushBack(parts[1])  # GET/POST
+		}
+		tokens.PushBack("HTTP %d", hit.Status)
+		stathat.PostEZCountTime(tokens.join(" | "), ezKey, 1, hit.LocalTime.Unix())
 	}
 }
 

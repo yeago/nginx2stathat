@@ -9,7 +9,6 @@ import (
 	"log/syslog"
 	"os"
 	"net/url"
-    "container/list"
     "strings"
 )
 
@@ -62,13 +61,13 @@ func postStats(prefix, ezKey string, hits <-chan *loghit.LogHit) {
 	for hit := range hits {
 		fqdn, err := url.Parse(hit.HttpReferer)
 		if err == nil {
-			tokens.PushBack(fqdn)
+			append(tokens, fqdn)
 		}
 		parts = strings.Split(hit.Request, " ")
 		if len(parts) == 3 {
-			tokens.PushBack(parts[1])  // GET/POST
+			append(tokens, parts[1])  // GET/POST
 		}
-		tokens.PushBack("HTTP %d", hit.Status)
+		append(tokens, "HTTP %d", hit.Status)
 		stathat.PostEZCountTime(strings.Join(tokens, " | "), ezKey, 1, hit.LocalTime.Unix())
 	}
 }

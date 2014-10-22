@@ -60,7 +60,7 @@ func postStats(prefix, ezKey string, dryRun bool, hits <-chan *loghit.LogHit) {
 		var tokens		[]string
 		var parts		 []string
         if len(prefix) > 0 {
-            tokens = append(tokens, fmt.Sprintf("%s" % prefix))
+            tokens = append(tokens, fmt.Sprintf("%s", prefix))
         }
 		fqdn, err := url.Parse(hit.HttpReferer)
 		if err == nil {
